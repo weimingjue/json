@@ -649,7 +649,8 @@ FieldLoop:
 			fv = fv.Field(i)
 		}
 
-		if f.omitEmpty && isEmptyValue(fv) {
+		//默认删除空数据
+		if (!f.keepEmpty) && isEmptyValue(fv) {
 			continue
 		}
 		e.WriteByte(next)
@@ -1042,7 +1043,7 @@ type field struct {
 	tag       bool
 	index     []int
 	typ       reflect.Type
-	omitEmpty bool
+	keepEmpty bool //默认删除空数据，加上此tag来保留空数据
 	quoted    bool
 
 	encoder encoderFunc
@@ -1168,7 +1169,7 @@ func typeFields(t reflect.Type) []field {
 						tag:       tagged,
 						index:     index,
 						typ:       ft,
-						omitEmpty: opts.Contains("omitempty"),
+						keepEmpty: opts.Contains("keepEmpty"),
 						quoted:    quoted,
 					}
 					field.nameBytes = []byte(field.name)
