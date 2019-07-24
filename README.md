@@ -2,7 +2,12 @@
 1.增加结构体首字母默认小写功能
 
     StructFirstLower=true表示首字母小写（tag的优先级最高，有tag则根据tag）
-
+    示例：
+    type Test struct {
+	    Data int
+	    Data2 int `json:"D2"`
+    }
+    赋值并解析成json：{"data":10,"D2":20}
 2.增加map、list、slide转结构体的功能
 
     Map2Struct（map[string]interface{}类型转结构体）
@@ -18,11 +23,17 @@
 	    Data interface{} `json:"data,keepEmpty"` //空也返回
     }
     
-    空的定义（bool一定会返回）：
-            Array、Map、Slice、String的长度是0
-            Int、Uint、Float是0
-            Interface、Ptr是nil
-
+    全局增加空数据返回：StructKeepType
+    示例，想全局让boolean、string、整形这三个空都返回
+    type TestKeepStruct struct {
+	    Bo  bool
+	    It  uint
+	    St  string
+	    Ar  []string
+    }
+	json.StructKeepType = json.KeepEmptyBool | json.KeepEmptyNumber | json.KeepEmptyString
+	结构体数据均为空，调用以上代码后返回的json：{"bo":false,"it":0,"st":""}
+	
 ## 导入方式
 导入：go get github.com/weimingjue/json
 

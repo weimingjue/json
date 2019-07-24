@@ -154,8 +154,20 @@ import (
 // handle them. Passing cyclic structures to Marshal will result in
 // an infinite recursion.
 //
-// 首字母默认小写
-var StructFirstLower = true
+
+var (
+	// 全局配置：首字母默认大、小写，也可以tag单独设置(`json:"data"`)
+	StructFirstLower = true
+
+	//全局配置：保留那些空类型，也可以tag单独保留(`json:"data,keepEmpty"`)
+	StructKeepType = KeepEmptyBool
+)
+
+const (
+	KeepEmptyBool, KeepEmptyNumber, KeepEmptyString, KeepEmptyArray emptyType = 0x1, 0x2, 0x4, 0x8
+)
+
+type emptyType int8
 
 func Marshal(v interface{}) ([]byte, error) {
 	e := newEncodeState()
@@ -317,16 +329,42 @@ func (e *encodeState) error(err error) {
 
 func isEmptyValue(v reflect.Value) bool {
 	switch v.Kind() {
-	case reflect.Array, reflect.Map, reflect.Slice, reflect.String:
-		return v.Len() == 0
-	//case reflect.Bool:
-	//	return !v.Bool()
+	case reflect.Bool:
+		if StructKeepType&KeepEmptyBool > 0 {
+			return false
+		} else {
+			return !v.Bool()
+		}
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		return v.Int() == 0
+		if StructKeepType&KeepEmptyNumber > 0 {
+			return false
+		} else {
+			return v.Int() == 0
+		}
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
-		return v.Uint() == 0
+		if StructKeepType&KeepEmptyNumber > 0 {
+			return false
+		} else {
+			return v.Uint() == 0
+		}
 	case reflect.Float32, reflect.Float64:
-		return v.Float() == 0
+		if StructKeepType&KeepEmptyNumber > 0 {
+			return false
+		} else {
+			return v.Float() == 0
+		}
+	case reflect.String:
+		if StructKeepType&KeepEmptyString > 0 {
+			return false
+		} else {
+			return v.Len() == 0
+		}
+	case reflect.Array, reflect.Map, reflect.Slice:
+		if StructKeepType&KeepEmptyArray > 0 {
+			return false
+		} else {
+			return v.Len() == 0
+		}
 	case reflect.Interface, reflect.Ptr:
 		return v.IsNil()
 	}
