@@ -34,7 +34,10 @@
 	json.StructKeepType = json.KeepEmptyBool | json.KeepEmptyNumber | json.KeepEmptyString
 	结构体数据均为空，调用以上代码后返回的json：{"bo":false,"it":0,"st":""}
 	
-4.将Time转json时默认为YY-MM-DD HH:mm:ss
+4.将Time转json时默认格式为YY-MM-DD HH:mm:ss
+    
+    修改格式：BaseTimeFormat
+    修改时区将time.Local改为对应的时区即可，如修改为0时区：time.Local = time.UTC
 
 	
 ## 导入方式
