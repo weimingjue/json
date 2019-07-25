@@ -162,6 +162,10 @@ var (
 
 	//全局配置：保留那些空类型，也可以tag单独保留(`json:"data,keepEmpty"`)
 	StructKeepType = KeepEmptyBool
+
+	//全局配置：将Time转换成string时的格式，默认YY-MM-DD HH:mm:ss
+	//默认转换的时区是time.Local，想切换时区请修改Local
+	BaseTimeFormat = "2006-01-02 15:04:05"
 )
 
 const (
@@ -497,8 +501,8 @@ func marshalerEncoder(e *encodeState, v reflect.Value, opts encOpts) {
 	var err error = nil
 	//时间类型将格式化成YY-MM-DD HH:mm:ss
 	if times, ok := m.(time.Time); ok {
-		var buf [32]byte
-		b = times.In(time.Local).AppendFormat(buf[:0], "\"2006-01-02 15:04:05\"")
+		var buf [64]byte
+		b = times.In(time.Local).AppendFormat(buf[:0], "\""+BaseTimeFormat+"\"")
 	} else {
 		b, err = m.MarshalJSON()
 	}

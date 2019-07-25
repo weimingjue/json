@@ -76,7 +76,7 @@ func Obj2Struct(obj interface{}, data reflect.Value) error {
 			if objKind == reflect.Slice && objValue.IsNil() {
 				return nil
 			}
-			length := objValue.Len();
+			length := objValue.Len()
 			for i := 0; i < length; i++ {
 				if i == 0 {
 					data.Set(reflect.MakeSlice(data.Type(), length, length))
@@ -212,7 +212,7 @@ func Obj2Struct(obj interface{}, data reflect.Value) error {
 		default:
 			//时间类型
 			if times, ok := obj.(time.Time); ok {
-				dataSet = times.In(time.Local).Format("2006-01-02 15:04:05")
+				dataSet = times.In(time.Local).Format(BaseTimeFormat)
 			} else {
 				return errors.New("类型不匹配：结构体类型" + data.Kind().String() + "，数据类型" + objKind.String())
 			}
