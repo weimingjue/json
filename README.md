@@ -34,6 +34,9 @@
 	json.StructKeepType = json.KeepEmptyBool | json.KeepEmptyNumber | json.KeepEmptyString
 	结构体数据均为空，调用以上代码后返回的json：{"bo":false,"it":0,"st":""}
 	
+4.将Time转json时默认为YY-MM-DD HH:mm:ss
+
+	
 ## 导入方式
 导入：go get github.com/weimingjue/json
 
