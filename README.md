@@ -41,6 +41,4 @@
 
 	
 ## 导入方式
-导入：go get github.com/weimingjue/json
-
-更新（已经导入过)：go get -u github.com/weimingjue/json
+导入或更新：go get -u github.com/weimingjue/json
